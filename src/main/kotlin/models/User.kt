@@ -1,8 +1,8 @@
 package models
 
 import utils.Utilities
- data class Account(
-     var userID: Int,
+ data class User(
+     var userId: Int,
      var fullName: String,
      var userName: String,
      var activeNow: Boolean,
@@ -25,11 +25,11 @@ import utils.Utilities
          return posts.find { post -> post.postId == id }
      }
 
-     fun delete(id: Int): Boolean {
+     fun deletePost(id: Int): Boolean {
          return posts.removeIf { post -> post.postId == id }
      }
 
-     fun update(id: Int, newPost: Post): Boolean {
+     fun updatePost(id: Int, newPost: Post): Boolean {
          val foundPost = findOne(id)
 
          if (foundPost != null) {
@@ -44,5 +44,10 @@ import utils.Utilities
      fun listPosts() =
          if (posts.isEmpty()) "\tNO RECENT POSTS"
          else Utilities.formatSetString(posts)
- }
 
+     /*override fun toString(): String {
+         val active = if (userisActiveNow) 'Y' else 'N'
+         return "$userId: $fullName, $userName, activeNow($active), $profilePicture, $following, $followers, \n${listPosts()}"
+             }*/
+
+ }
