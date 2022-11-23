@@ -1,7 +1,7 @@
 package utils
 
 import models.Post
-import models.Account
+import models.User
 
 object Utilities {
 
@@ -9,9 +9,9 @@ object Utilities {
     //      name; we don't have to create an object of Utilities to use them.
 
     @JvmStatic
-    fun formatListString(accountsToFormat: List<Account>): String =
+    fun formatListString(accountsToFormat: List<User>): String =
         accountsToFormat
-            .joinToString(separator = "\n") { account ->  "$account" }
+            .joinToString(separator = "\n") { user ->  "$user" }
 
     @JvmStatic
     fun formatSetString(postsToFormat: Set<Post>): String =
