@@ -1,12 +1,14 @@
 import controllers.UserAPI
 import models.User
 import models.Post
+import persistance.XMLSerializer
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
 import utils.ScannerInput.readNextChar
+import java.io.File
 import kotlin.system.exitProcess
 
-private val userAPI = UserAPI()
+private val userAPI = UserAPI(XMLSerializer(File("users.xml")))
 fun main() = runMenu()
 
 fun runMenu(){
@@ -32,7 +34,10 @@ fun mainMenu() = readNextInt(
          > |   2) List accounts                                |
          > |   3) Update your account                          |
          > |   4) Delete your account                          |
-         > -----------------------------------------------------  
+         > ----------------------------------------------------- 
+         >    20) Save Account                                 |
+         >    21) Load Accounts                                |
+         > -----------------------------------------------------
          > |   0) Exit                                         |
          > -----------------------------------------------------  
          > ==>>""".trimMargin(">")
@@ -41,6 +46,24 @@ fun mainMenu() = readNextInt(
 //--------------------------------------------------------------------------------
 // USER MENU
 //--------------------------------------------------------------------------------
+
+// SAVE AND LOAD
+fun saveNotes(){
+    try {
+        userAPI.store()
+    } catch (e: Exception) {
+        System.err.println("Error writing to file: $e")
+    }
+}
+
+fun loadNotes(){
+    try {
+        userAPI.load()
+    } catch (e: Exception) {
+        System.err.println("Error reading to file: $e")
+    }
+}
+
 fun addUser(){
 
 }
@@ -62,7 +85,7 @@ fun exitApp(){
 }
 
 //----------------------------------------------------------------------------------------
-// POST MENU (only available for accounts that are Active Now
+// POST MENU (only available for accounts that are Active Now.
 //----------------------------------------------------------------------------------------
 
 private fun addPostToUser(){

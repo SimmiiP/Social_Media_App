@@ -9,8 +9,8 @@ object Utilities {
     //      name; we don't have to create an object of Utilities to use them.
 
     @JvmStatic
-    fun formatListString(accountsToFormat: List<User>): String =
-        accountsToFormat
+    fun formatListString(usersToFormat: List<User>): String =
+        usersToFormat
             .joinToString(separator = "\n") { user ->  "$user" }
 
     @JvmStatic

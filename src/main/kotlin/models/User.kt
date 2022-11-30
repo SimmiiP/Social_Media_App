@@ -9,6 +9,7 @@ import utils.Utilities
      var profilePicture: Boolean,
      var following: Int,
      var followers: Int,
+     var verified: Boolean,
      var posts : MutableSet<Post> = mutableSetOf()
  ) {
      private var lastPostId = 0
