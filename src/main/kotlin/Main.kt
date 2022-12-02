@@ -56,9 +56,10 @@ fun subMenu(): Int {
        |       POSTS SUBMENU         |
        -------------------------------
        |   1) Add a post             |
-       |   2) Edit a post            | 
-       |   3) Comment on a post      |
-       |   4) Delete a post          |
+       |   2) List recent posts      |
+       |   3) Edit a post            | 
+       |   4) Comment on a post      |
+       |   5) Delete a post          |
        |                             |
        |                             |
        -------------------------------
