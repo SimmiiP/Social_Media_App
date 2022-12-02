@@ -65,6 +65,51 @@ class UserAPITest {
             assertEquals(newUser, emptyUsers!!.findUser(emptyUsers!!.numberOfUsers() - 1))
         }
     }
+    @Nested
+    inner class CountingMethods {
+
+        @Test
+        fun numberOfUsersCalculatedCorrectly() {
+            assertEquals(5, populatedUsers!!.numberOfUsers())
+            assertEquals(0, emptyUsers!!.numberOfUsers())
+        }
+
+        @Test
+        fun numberOfActiveUsersCalculatedCorrectly() {
+            assertEquals(3, populatedUsers!!.numberOfActiveUsers())
+            assertEquals(0, emptyUsers!!.numberOfActiveUsers())
+        }
+
+        @Test
+        fun numberOfOfflineUsersCalculatedCorrectly() {
+            assertEquals(2, populatedUsers!!.numberOfUsersOffline())
+            assertEquals(0, emptyUsers!!.numberOfUsersOffline())
+        }
+
+        @Test
+        fun numberOfUsersWithProfilePictureCalculatedCorrectly() {
+            assertEquals(4, populatedUsers!!.numberOfUsersWithProfilePic())
+            assertEquals(0, emptyUsers!!.numberOfUsersWithProfilePic())
+        }
+
+        @Test
+        fun numberOfUsersWithoutProfilePictureCalculatedCorrectly() {
+            assertEquals(1, populatedUsers!!.numberOfUsersWithoutProfilePic())
+            assertEquals(0, emptyUsers!!.numberOfUsersWithoutProfilePic())
+        }
+
+        @Test
+        fun numberOfVerifiedUsersCalculatedCorrectly() {
+            assertEquals(2, populatedUsers!!.numberOfVerifiedUsers())
+            assertEquals(0, emptyUsers!!.numberOfVerifiedUsers())
+        }
+
+        @Test
+        fun numberOfUnverifiedUsersCalculatedCorrectly() {
+            assertEquals(3, populatedUsers!!.numberOfUnverifiedUsers())
+            assertEquals(0, emptyUsers!!.numberOfUnverifiedUsers())
+        }
+    }
 
     @Nested
     inner class ListUsers {
@@ -76,7 +121,7 @@ class UserAPITest {
         }
 
         @Test
-        fun `listAllNotes returns Users when ArrayList has users stored`() {
+        fun `listAllUsers returns Users when ArrayList has users stored`() {
             assertEquals(5, populatedUsers!!.numberOfUsers())
             val usersString = populatedUsers!!.listAllUsers().lowercase()
             assertTrue(usersString.contains("joe soap"))
@@ -85,36 +130,118 @@ class UserAPITest {
             assertTrue(usersString.contains("amala dlamini"))
             assertTrue(usersString.contains("beyonce knowles"))
         }
+
+        @Test
+        fun `listActiveUsers returns no users online when ArrayList is empty`() {
+            assertEquals(0, emptyUsers!!.numberOfActiveUsers())
+            assertTrue(
+                emptyUsers!!.listActiveUsers().lowercase().contains("no users online")
+            )
+        }
+
+        @Test
+        fun `listActiveUsers returns active users when ArrayList has active users stored`() {
+            assertEquals(3, populatedUsers!!.numberOfActiveUsers())
+            val activeUsersString = populatedUsers!!.listActiveUsers().lowercase()
+            assertTrue(activeUsersString.contains("joe soap"))
+            Assertions.assertFalse(activeUsersString.contains("amala dlamini"))
+            assertTrue(activeUsersString.contains("lilly walsh"))
+            assertTrue(activeUsersString.contains("beyonce knowles"))
+            Assertions.assertFalse(activeUsersString.contains("jake nichols"))
+        }
+
+        @Test
+        fun `listOfflineUsers returns no users when ArrayList is empty`() {
+            assertEquals(0, emptyUsers!!.numberOfUsersOffline())
+            assertTrue(
+                emptyUsers!!.listOfflineUsers().lowercase().contains("all users are online")
+            )
+        }
+
+        @Test
+        fun `listOfflineUsers returns offline users when ArrayList has offline users stored`() {
+            assertEquals(2, populatedUsers!!.numberOfUsersOffline())
+            val offlineUsersString = populatedUsers!!.listOfflineUsers().lowercase()
+            assertTrue(offlineUsersString.contains("jake nichols"))
+            Assertions.assertFalse(offlineUsersString.contains("lilly walsh"))
+            assertTrue(offlineUsersString.contains("amala dlamini"))
+            Assertions.assertFalse(offlineUsersString.contains("beyonce knowles"))
+        }
+
+        @Test
+        fun `listUsersWithProfilePic returns no users when ArrayList is empty`() {
+            assertEquals(0, emptyUsers!!.numberOfUsersWithProfilePic())
+            assertTrue(
+                emptyUsers!!.listUsersWithProfilePic().lowercase().contains("no users have a profile pic")
+            )
+        }
+
+        @Test
+        fun `listUsersWithProfilePic returns users without a profile picture when ArrayList has users without a profile picture stored`() {
+            assertEquals(4, populatedUsers!!.numberOfUsersWithProfilePic())
+            val UsersWithProfilePicString = populatedUsers!!.listUsersWithProfilePic().lowercase()
+            assertTrue(UsersWithProfilePicString.contains("joe soap"))
+            Assertions.assertFalse(UsersWithProfilePicString.contains("jake nichols"))
+            assertTrue(UsersWithProfilePicString.contains("lilly walsh"))
+            assertTrue(UsersWithProfilePicString.contains("amala dlamini"))
+            assertTrue(UsersWithProfilePicString.contains("beyonce knowles"))
+        }
+
+        @Test
+        fun `listUsersWithoutProfilePic returns no users when ArrayList is empty`() {
+            assertEquals(0, emptyUsers!!.numberOfUsersWithoutProfilePic())
+            assertTrue(
+                emptyUsers!!.listUsersWithoutProfilePic().lowercase().contains("all users have a profile pic")
+            )
+        }
+
+        @Test
+        fun `listUsersWithoutProfilePic returns users without a profile picture when ArrayList has users without a profile picture stored`() {
+            assertEquals(1, populatedUsers!!.numberOfUsersWithoutProfilePic())
+            val usersWithoutProfilePicString = populatedUsers!!.listUsersWithoutProfilePic().lowercase()
+            assertTrue(usersWithoutProfilePicString.contains("jake nichols"))
+            Assertions.assertFalse(usersWithoutProfilePicString.contains("amala dlamini"))
+            Assertions.assertFalse(usersWithoutProfilePicString.contains("beyonce knowles"))
+        }
+
+        @Test
+        fun `listVerifiedUsers returns no users when ArrayList is empty`() {
+            assertEquals(0, emptyUsers!!.numberOfVerifiedUsers())
+            assertTrue(
+                emptyUsers!!.listVerifiedUsers().lowercase().contains("no users are verified")
+            )
+        }
+
+        @Test
+        fun `listVerifiedUsers returns verified users when ArrayList has unverified users stored`() {
+            assertEquals(2, populatedUsers!!.numberOfVerifiedUsers())
+            val verifiedUsersString = populatedUsers!!.listVerifiedUsers().lowercase()
+            assertTrue(verifiedUsersString.contains("amala dlamini"))
+            Assertions.assertFalse(verifiedUsersString.contains("joe soap"))
+            assertTrue(verifiedUsersString.contains("beyonce knowles"))
+            Assertions.assertFalse(verifiedUsersString.contains("lilly walsh"))
+        }
+
+        @Test
+        fun `listUnverifiedUsers returns no users when ArrayList is empty`() {
+            assertEquals(0, emptyUsers!!.numberOfUnverifiedUsers())
+            assertTrue(
+                emptyUsers!!.listUnverifiedUsers().lowercase().contains("all users are verified")
+            )
+        }
+
+        @Test
+        fun `listUnverifiedUsers returns unverified users when ArrayList has unverified users stored`() {
+            assertEquals(3, populatedUsers!!.numberOfUnverifiedUsers())
+            val unverifiedUsersString = populatedUsers!!.listUnverifiedUsers().lowercase()
+            assertTrue(unverifiedUsersString.contains("joe soap"))
+            Assertions.assertFalse(unverifiedUsersString.contains("amala dlamini"))
+            assertTrue(unverifiedUsersString.contains("lilly walsh"))
+            assertTrue(unverifiedUsersString.contains("jake nichols"))
+            Assertions.assertFalse(unverifiedUsersString.contains("beyonce knowles"))
+        }
     }
-
-        /*@Test
-        fun `listActiveNotes returns no active notes stored when ArrayList is empty`() {
-            assertEquals(0, emptyNotes!!.numberOfActiveNotes())
-            assertTrue(
-                emptyNotes!!.listActiveNotes().lowercase().contains("no active notes")
-            )
-        }
-
-        @Test
-        fun `listActiveNotes returns active notes when ArrayList has active notes stored`() {
-            assertEquals(3, populatedNotes!!.numberOfActiveNotes())
-            val activeNotesString = populatedNotes!!.listActiveNotes().lowercase()
-            assertTrue(activeNotesString.contains("learning kotlin"))
-            Assertions.assertFalse(activeNotesString.contains("code app"))
-            assertTrue(activeNotesString.contains("summer holiday"))
-            assertTrue(activeNotesString.contains("test app"))
-            Assertions.assertFalse(activeNotesString.contains("swim"))
-        }
-
-        @Test
-        fun `listArchivedNotes returns no archived notes when ArrayList is empty`() {
-            assertEquals(0, emptyNotes!!.numberOfArchivedNotes())
-            assertTrue(
-                emptyNotes!!.listArchivedNotes().lowercase().contains("no archived notes")
-            )
-        }
-
-        @Test
+       /* @Test
         fun `listNotesBySelectedPriority returns No Notes when ArrayList is empty`() {
             assertEquals(0, emptyNotes!!.numberOfNotes())
             assertTrue(emptyNotes!!.listNotesBySelectedPriority(1).lowercase().contains("no notes")
