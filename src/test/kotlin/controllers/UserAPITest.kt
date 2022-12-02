@@ -323,6 +323,65 @@ class UserAPITest {
     }
 
     @Nested
+    inner class SearchMethods {
+
+        @Test
+        fun `search users by name returns no users when no users with that name exists`() {
+            assertEquals(5, populatedUsers!!.numberOfUsers())
+            val searchResults = populatedUsers!!.searchByFullName("no results expected")
+            assertTrue(searchResults.isEmpty())
+
+            assertEquals(0, emptyUsers!!.numberOfUsers())
+            assertTrue(emptyUsers!!.searchByFullName("no results expected").isEmpty())
+        }
+
+        @Test
+        fun `search users by name returns users when users with that name exist`() {
+            assertEquals(5, populatedUsers!!.numberOfUsers())
+
+            var searchResults = populatedUsers!!.searchByFullName("Joe Soap")
+            assertTrue(searchResults.contains("Joe Soap"))
+            assertFalse(searchResults.contains("Amala Dlamini"))
+
+            searchResults = populatedUsers!!.searchByFullName("Soap")
+            assertTrue(searchResults.contains("Joe Soap"))
+            assertFalse(searchResults.contains("Amala Dlamini"))
+
+            searchResults = populatedUsers!!.searchByFullName(("soAp"))
+            assertTrue(searchResults.contains("Joe Soap"))
+            assertFalse(searchResults.contains("Amala Dlamini"))
+        }
+
+        @Test
+        fun `search users by username returns no users when no users with that username exists`() {
+            assertEquals(5, populatedUsers!!.numberOfUsers())
+            val searchResults = populatedUsers!!.searchByUsername("no results expected")
+            assertTrue(searchResults.isEmpty())
+
+            assertEquals(0, emptyUsers!!.numberOfUsers())
+            assertTrue(emptyUsers!!.searchByUsername("no results expected").isEmpty())
+        }
+
+        @Test
+        fun `search user by username returns notes when notes with that title exist`() {
+            assertEquals(5, populatedUsers!!.numberOfUsers())
+
+            var searchResults = populatedUsers!!.searchByUsername("joeySoap")
+            assertTrue(searchResults.contains("joeySoap"))
+            assertFalse(searchResults.contains("Doja Cat"))
+
+            searchResults = populatedUsers!!.searchByUsername("Soap")
+            assertTrue(searchResults.contains("joeySoap"))
+            assertFalse(searchResults.contains("Doja Cat"))
+
+            searchResults = populatedUsers!!.searchByUsername(("soAp"))
+            assertTrue(searchResults.contains("joeySoap"))
+            assertFalse(searchResults.contains("Doja Cat"))
+        }
+
+    }
+
+    @Nested
     inner class PersistenceTests {
 
         @Test

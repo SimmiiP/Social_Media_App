@@ -70,6 +70,7 @@ class UserAPI(serializerType: Serializer) {
 
     fun numberOfVerifiedUsers(): Int = users.count { user: User -> user.verified }
     fun numberOfUnverifiedUsers(): Int = users.count { user: User -> !user.verified }
+
     //UPDATE USERS
 
     fun updateUser(id: Int, user: User): Boolean {
@@ -95,6 +96,16 @@ class UserAPI(serializerType: Serializer) {
     fun deleteUser(id: Int): Boolean {
         return users.removeIf { user -> user.userId == id }
     }
+
+    //SEARCH
+
+    fun searchByUsername(searchString: String) =
+        formatListString(
+            users.filter {user -> user.userName.contains(searchString, ignoreCase = true)} )
+
+    fun searchByFullName(searchString: String) =
+        formatListString(
+            users.filter {user -> user.fullName.contains(searchString, ignoreCase = true)} )
 
 
     //SAVE AND LOAD
