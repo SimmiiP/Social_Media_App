@@ -42,7 +42,7 @@ import utils.Utilities
          return false
      }
 
-     fun listPosts() =
+     fun listAllPosts() =
          if (posts.isEmpty()) "\tNO RECENT POSTS"
          else Utilities.formatSetString(posts)
 

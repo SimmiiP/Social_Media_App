@@ -1,3 +1,28 @@
 <object-stream>
-  <list/>
+  <list>
+    <models.User>
+      <userId>0</userId>
+      <fullName>Joe Soap</fullName>
+      <userName> joeysoapy</userName>
+      <activeNow>true</activeNow>
+      <profilePicture>true</profilePicture>
+      <following>100</following>
+      <followers>700</followers>
+      <verified>false</verified>
+      <posts class="linked-hash-set"/>
+      <lastPostId>0</lastPostId>
+    </models.User>
+    <models.User>
+      <userId>1</userId>
+      <fullName>Beyonce Knowles</fullName>
+      <userName>Beyonce</userName>
+      <activeNow>true</activeNow>
+      <profilePicture>true</profilePicture>
+      <following>100</following>
+      <followers>2000000</followers>
+      <verified>true</verified>
+      <posts class="linked-hash-set"/>
+      <lastPostId>0</lastPostId>
+    </models.User>
+  </list>
 </object-stream>
