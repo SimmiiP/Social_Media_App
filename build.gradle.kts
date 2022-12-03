@@ -3,6 +3,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.7.10"
     id("org.jetbrains.dokka") version "1.6.10"
+    jacoco
+
+    // Plugin for Klint
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
     application
 }
 
@@ -24,6 +28,8 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    //report is always generated after tests run
+    finalizedBy(tasks.jacocoTestReport)
 }
 
 tasks.withType<KotlinCompile> {
