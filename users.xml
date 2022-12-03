@@ -3,24 +3,36 @@
     <models.User>
       <userId>0</userId>
       <fullName>Joe Soap</fullName>
-      <userName> joeysoapy</userName>
+      <userName>joeySoap</userName>
       <activeNow>true</activeNow>
       <profilePicture>true</profilePicture>
-      <following>100</following>
-      <followers>700</followers>
+      <following>74</following>
+      <followers>100</followers>
       <verified>false</verified>
       <posts class="linked-hash-set"/>
       <lastPostId>0</lastPostId>
     </models.User>
     <models.User>
       <userId>1</userId>
-      <fullName>Beyonce Knowles</fullName>
-      <userName>Beyonce</userName>
+      <fullName>Lilly Walsh</fullName>
+      <userName>lilwalshx</userName>
       <activeNow>true</activeNow>
       <profilePicture>true</profilePicture>
-      <following>100</following>
-      <followers>2000000</followers>
-      <verified>true</verified>
+      <following>300</following>
+      <followers>470</followers>
+      <verified>false</verified>
+      <posts class="linked-hash-set"/>
+      <lastPostId>0</lastPostId>
+    </models.User>
+    <models.User>
+      <userId>2</userId>
+      <fullName>Jake Nichols</fullName>
+      <userName>jakey</userName>
+      <activeNow>false</activeNow>
+      <profilePicture>false</profilePicture>
+      <following>400</following>
+      <followers>100</followers>
+      <verified>false</verified>
       <posts class="linked-hash-set"/>
       <lastPostId>0</lastPostId>
     </models.User>
