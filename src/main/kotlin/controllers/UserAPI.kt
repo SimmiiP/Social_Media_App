@@ -59,6 +59,20 @@ class UserAPI(serializerType: Serializer) {
         if (numberOfVerifiedUsers() == 0) "All users are verified"
         else formatListString(users.filter { user -> user.verified == false })
 
+    // LIST POSTS
+
+   /* fun listAllPosts(): String =
+        if (numberOfUsers() == 0) "No users online"
+        else {
+            var listAllUsers = ""
+            for (user in users) {
+                for (post in user.posts)  {
+                        this.listAllPosts() += post.photoName + ": " + post.caption + "\n"
+                    }
+            }
+            listAllPosts()
+        }*/
+
     //COUNT USERS
 
     fun numberOfUsers() = users.size

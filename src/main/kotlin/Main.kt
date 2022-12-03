@@ -57,9 +57,8 @@ fun subMenu(): Int {
        |       POSTS SUBMENU         |
        -------------------------------
        |   1) Add a post             |
-       |   2) List recent posts      |
+       |   2) View recent posts      |
        |   3) Edit a post            | 
-       |   4) Comment on a post      |
        |   5) Delete a post          |
        |                             |
        |                             |
@@ -92,9 +91,27 @@ fun subMenu2(): Int {
     )
 }
 
+fun subMenu4(): Int {
+    return ScannerInput.readNextInt(
+        """${ANSI_BLUE}
+           ------------------------------------------------
+           |             Social Media App                 |
+           ------------------------------------------------
+           |            LIST Posts SUBMENU                |
+           ------------------------------------------------
+           |   1) List All Posts                          |
+           |   2) List Posts by Verified Users            |
+           |   3) List Offline Users                      |
+           ------------------------------------------------
+           ${ANSI_RED}|   0) Exit SubMenu                            |
+           ------------------------------------------------
+        ==>> ${ANSI_RESET}""".trimIndent()
+    )
+}
+
 fun subMenu3(): Int {
     return ScannerInput.readNextInt(
-        """${ANSI_PURPLE}
+        """${ANSI_GREEN}
            ------------------------------------------------
            |             Social Media App                 |
            ------------------------------------------------
@@ -131,11 +148,9 @@ fun runSubMenu(){
     do{
         when (val option = subMenu()){
             1 -> addPostToUser()
-            2 -> listAllUsers()
-            3 -> updateUser()
-            4 -> deleteUser()
-            20 -> saveUsers()
-            21 -> loadUsers()
+            2 -> runSubMenu4()
+            3 -> updatePostsContentsInUser()
+            4 -> deleteAPost()
             0 -> exitSubMenu()
             else -> println("Invalid menu choice: $option")
         }
@@ -153,6 +168,20 @@ fun runSubMenu2(){
             5 -> listUsersWithoutProfilePic()
             6 -> listVerifiedUsers()
             7 -> listUnverifiedUsers()
+            0 -> exitSubMenu()
+            else -> println("Invalid menu choice: $option")
+        }
+    } while (true)
+
+}
+
+fun runSubMenu4(){
+    do{
+        when (val option = subMenu4()){
+            //1 -> listAllPosts()
+           // 2 -> listVerifiedUsersPosts()
+           // 3 -> listOfflineUsersPosts()
+           // 4 -> listActiveUsersPosts()
             0 -> exitSubMenu()
             else -> println("Invalid menu choice: $option")
         }
@@ -190,6 +219,8 @@ fun loadUsers(){
 }
 
 // ADD
+
+// ADD USERS
 fun addUser(){
 logger.info {"addUser() function invoked"}
 
@@ -203,7 +234,8 @@ logger.info {"addUser() function invoked"}
     val followers = readNextInt("How many accounts are following you?")
     val verified = readNextChar("You can apply for verification! Input 'y' to apply! ")
     val booleanVerified = (verified == 'y' || verified == 'Y')
-    val isAdded = userAPI.addUser(User(userId = 0, fullName = fullName,userName = userName, activeNow = booleanactiveNow, profilePicture = booleanprofilePicture,
+    val isAdded = userAPI.addUser(User(
+        userId = 0, fullName = fullName, userName = userName, activeNow = booleanactiveNow, profilePicture = booleanprofilePicture,
         following = following, followers = followers, verified = booleanVerified ))
 
     if(isAdded){
@@ -213,13 +245,15 @@ logger.info {"addUser() function invoked"}
     }
 }
 
+//ADD POSTS
 private fun addPostToUser(){
     logger.info {"addPost() function invoked"}
     listActiveUsers()
     val user: User? = askUserToChooseActiveAccount()
     if (user != null){
     userAPI.findUser(0)!!.addPost(
-        Post(postId = 0,
+        Post(
+            postId = 0,
              photoName = readNextLine("\t Name this Post"),
              caption = readNextLine("\t Add a caption!"),
              numOfLikes = readNextInt("How many likes does it have?"),
@@ -229,6 +263,8 @@ private fun addPostToUser(){
 }}
 
 //LIST
+
+//LIST USERS
 fun listAllUsers(){
     logger.info {"listAllUsers() function invoked"}
     println(userAPI.listAllUsers())
@@ -264,7 +300,13 @@ fun listUnverifiedUsers(){
     println(userAPI.listUnverifiedUsers())
 }
 
+//LIST POSTS
+
+
+
 //UPDATE
+
+//UPDATE USER
 fun updateUser(){
     logger.info {"updateNote() function invoked"}
     listAllUsers()
@@ -293,6 +335,29 @@ fun updateUser(){
     }
 }
 
+//UPDATE POSTS
+
+fun updatePostsContentsInUser() {
+    val user: User? = askUserToChooseActiveAccount()
+    if (user != null) {
+        val post: Post? = askUserToChoosePost(user)
+        if (post != null) {
+            val newphotoName = readNextLine("Rename this post: ")
+            val newCaption = readNextLine("Write a new caption")
+            val newLikeNums = readNextInt("Change Likes")
+            val newCommentNums = readNextInt("Change Comments")
+            if (user.updatePost(post.postId, Post(photoName = newphotoName, caption = newCaption, numOfLikes = newLikeNums, numOfComments = newCommentNums )))
+            {
+                println("Item contents updated")
+            } else {
+                println("Item contents NOT updated")
+            }
+        } else {
+            println("Invalid Item Id")
+        }
+    }
+}
+
 //DELETE
 fun deleteUser(){
     listAllUsers()
@@ -307,6 +372,23 @@ fun deleteUser(){
             println("Delete NOT Successful")
         }
     }
+}
+
+//DELETE POSTS
+fun deleteAPost() {
+    val user: User? = askUserToChooseActiveAccount()
+    if (user != null){
+        val post: Post? = askUserToChoosePost(user)
+        if (post != null){
+            val isDeleted = user.deletePost(post.postId)
+            if (isDeleted){
+                println("Delete Successful")
+            } else{
+                println("Delete NOT Successful")
+            }
+        }
+    }
+
 }
 
 //SEARCH
@@ -341,16 +423,13 @@ fun exitSubMenu(){
     System.exit(runMenu())
 }
 
-fun deleteAPost() {
-
-}
 
 //------------------------------------
 //HELPER FUNCTIONS
 //------------------------------------
 
 private fun askUserToChooseActiveAccount(): User? {
-    listAllUsers()
+    listActiveUsers()
     if (userAPI.listActiveUsers() > 0.toString()) {
         val user = userAPI.findUser(readNextInt("\nEnter the id of the account you'd like to access: "))
         if (user != null) {
@@ -368,29 +447,29 @@ private fun askUserToChooseActiveAccount(): User? {
 
 private fun askUserToChooseVerifiedAccount(): User? {
     listAllUsers()
-    if (userAPI.listActiveUsers() > 0.toString()) {
+    if (userAPI.listVerifiedUsers() > 0.toString()) {
         val user = userAPI.findUser(readNextInt("\nEnter the id of the account you'd like to access: "))
         if (user != null) {
-            if (user.activeNow) {
-                println("This user is NOT online")
+            if (!user.verified) {
+                println("This user is NOT verified")
             } else {
-                return user //chosen user is active
+                return user //chosen user is verified
             }
         } else {
             println("This user does not exist")
         }
     }
-    return null //selected user is not active
+    return null //selected user is not verified
 }
-/*
-private fun askUserToChoosePost(post: Post): Post? {
-    if (post.numberOfPosts() > 0) {
-        print(post.listAllPosts())
-        return post.findOne(readNextInt("\nEnter the id of the post to find: "))
+
+private fun askUserToChoosePost(user: User): Post? {
+    if (user.numberOfPosts() > 0) {
+        print(user.listAllPosts())
+        return user.findOne(readNextInt("\nEnter the id of the post to find: "))
     }
     else{
-        println ("No posts for chosen user")
+        println ("This user hasn't posted anything")
         return null
     }
 }
-*/
+
