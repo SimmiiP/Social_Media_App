@@ -23,4 +23,8 @@ object Utilities {
         return numberToCheck in min..max
     }
 
+    fun isValidListId(id: Int, list: List<User>): Boolean {
+        return (id >= 0 && id < list.size)
+    }
+
 }
