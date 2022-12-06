@@ -45,8 +45,9 @@ fun mainMenu() = readNextInt(
          |   2) List accounts                                |
          |   3) Update your account                          |
          |   4) Delete your account                          |
-         |   5) Search accounts
+         |   5) Search accounts                              |
          |   6) Posts                                        |
+         |   7) Change Account Status                        |
          ----------------------------------------------------- 
          |   20) Save Account                                |
          |  21) Load Accounts                                |
@@ -132,6 +133,26 @@ fun subMenu3(): Int {
     )
 }
 
+fun subMenu5(): Int {
+    return ScannerInput.readNextInt(
+        """${ANSI_GREEN}
+           ------------------------------------------------
+           |             Social Media App                 |
+           ------------------------------------------------
+           |           CHANGE ACCOUNT STATUS              |
+           ------------------------------------------------
+           |   1) Go Online                               |
+           |   2) Go Offline                              |
+           |   3) Get Verified                            |
+           |   4) Unverify your account                   |
+           ------------------------------------------------
+           ${ANSI_RED}|   0) Exit SubMenu                            |
+           ------------------------------------------------
+        ==>> ${ANSI_RESET}""".trimIndent()
+    )
+}
+
+
 //RUN MENUS AND SUBMENUS
 fun runMenu(): Int {
     do{
@@ -142,6 +163,7 @@ fun runMenu(): Int {
             4 -> deleteUser()
             5 -> runSubMenu3()
             6 -> runSubMenu()
+            7 -> runSubMenu5()
             20 -> saveUsers()
             21 -> loadUsers()
             0 -> exitApp()
@@ -206,17 +228,19 @@ fun runSubMenu3(){
 
 }
 
-/*fun runSubMenu5(){
+fun runSubMenu5(){
     do{
         when (val option = subMenu5()){
-            1 -> searchForPostsByPhotoName()
-            2 -> searchByCaption()
+           // 1 -> goOnline()
+           // 2 -> goOffline()
+          //  3 -> getVerified()
+          //  4 -> unverify()
             0 -> exitSubMenu()
             else -> println("Invalid menu choice: $option")
         }
     } while (true)
 
-}*/
+}
 
 // SAVE AND LOAD
 fun saveUsers(){
@@ -358,8 +382,8 @@ fun updateUser(){
             val booleanActiveNow = (activeNow == 'y'|| activeNow == 'Y')
             val profilePicture = readNextChar("Do you want to set a profile picture? 'y' or 'n'")
             val booleanProfilePicture = (profilePicture == 'y' || profilePicture == 'Y')
-            val following = readNextInt("How many accounts do you follow?")
-            val followers = readNextInt("How many accounts are following you?")
+            val following = readValidCount("How many accounts do you follow?")
+            val followers = readValidCount2("How many accounts are following you?")
             val verified = readNextChar("You can apply for verification! Input 'y' to apply! ")
             val booleanVerified = (verified == 'y' || verified == 'Y')
             if (userAPI.updateUser(id, User(0, fullName = fullName, userName = userName, activeNow = booleanActiveNow, profilePicture = booleanProfilePicture, following = following, followers = followers, verified = booleanVerified ))){
@@ -380,10 +404,10 @@ fun updatePostsContentsInUser() {
     if (user != null) {
         val post: Post? = askUserToChoosePost(user)
         if (post != null) {
-            val newPhotoName = readNextLine("Rename this post: ")
+            val newPhotoName = readNextPhotoName("Rename this post from: ${photoNameUtility.photoNames}")
             val newCaption = readNextLine("Write a new caption")
-            val newLikeNums = readNextInt("Change Likes")
-            val newCommentNums = readNextInt("Change Comments")
+            val newLikeNums = readValidCount3("Change Likes")
+            val newCommentNums = readValidCount4("Change Comments")
             if (user.updatePost(post.postId, Post(photoName = newPhotoName, caption = newCaption, numOfLikes = newLikeNums, numOfComments = newCommentNums )))
             {
                 println("Item contents updated")
