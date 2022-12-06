@@ -34,6 +34,7 @@ import utils.Utilities
          val foundPost = findOne(id)
 
          if (foundPost != null) {
+             foundPost.photoName = newPost.photoName
              foundPost.caption = newPost.caption
 
              return true
@@ -45,6 +46,8 @@ import utils.Utilities
      fun listAllPosts() =
          if (posts.isEmpty()) "\tNO RECENT POSTS"
          else Utilities.formatSetString(posts)
+
+
 
      /*override fun toString(): String {
          val active = if (userisActiveNow) 'Y' else 'N'
