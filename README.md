@@ -151,6 +151,53 @@ A string is imputed by the user which is matched by the api to one of the users
 with that username. If it doesn't match a result, the console returns "No users
 with that username found". It ignores case and returns half spelled values as well.
 
+## Go Online
+
+The user has to input the index number of the offline user they would like to set to active now,
+and confirm that they would like to set it to active with a yes or no answer.
+The api function then marks the active now field as true.
+The listing function for offline users is also used here to list the users that can actually
+be marked active. The answers "Yes" and "No" must be in this format.
+
+
+## Go Offline
+
+Similar to the previous entry except that the functions now do the opposite,
+the listing function for active users is used to list the users that can be  set to offline.
+The answers "Yes" and "No" must be in this format.
+
+
+## Get Verified
+
+The user has to input the index number of the unverified user they would like to set to verified,
+and confirm that they would like to set it to verified with a yes or no answer.
+The api function then marks the verified field as true.
+The listing function for unverified users is also used here to list the users that can actually
+be marked verified. The answers "Yes" and "No" must be in this format.
+
+## Unverify Account
+
+Similar to the previous entry except that the functions now do the opposite,
+the listing function for verified users is used to list the users that can be unverified.
+The answers "Yes" and "No" must be in this format.
+
+## Set Profile Picture 
+
+The user has to input the index number of the user they would like to set a profile picture for,
+and confirm that they would like to set it with a yes or no answer.
+The api function then marks the profile picture field as true.
+The listing function for users without profile picutre users is also used here to list the users
+that can actually be set a profile picture. The answers "Yes" and "No" must be in this format.
+
+
+## Remove Profile Picture
+
+Similar to the previous entry except that the functions now do the opposite,
+the listing function for users with profile picture is used to list the users that can have
+their profile picture removed. The answers "Yes" and "No" must be in this format.
+
+
+
 ## Exit App
 
 End the instance of the app running.
@@ -166,67 +213,6 @@ Serializer is used to save notes.
 ## Load Notes
 
 Serializer is used to load up saved notes.
-
-
-
-
-
-
-
-
-
-## List Notes by Selected Priority
-
-Prints notes by selected priority. The Api function fetches notes that contain the same
-number between 1 and 5 as imputed by the user in the priority field.
-
-
-## List Notes by Category
-
-Prints notes by category. The Api function fetches notes that contain the same words as
-imputed by the user in the category field. This accounts for half imputed categories and when words
-are not fully spelled.
-
-
-## Archive Notes
-
-The user has to input the index number of the note they would like to archive
-and confirm that they want to archive it in the main which reads these responses.
-The answers to the questions are yes and no for the function to read, and the first letter
-of the users response hase to be to uppercase.
-The api function then marks the isNoteArchived field to true instead of its default false.
-The listing function for active notes is also used here to list the notes that can be archived.
-
-
-
-
-## Go Online
-
-The user has to input the index number of the note they would like to mark done,
-and confirm that they would like to mark it done with a yes or no answer same as the
-archive notes function. The api function then marks the note status field as true.
-The listing function for notes to-do is also used here to list the notes that can actually
-be marked done
-
-
-## Go Offline
-
-Similar to the previous entry except that the functions now do the opposite,
-the listing function for notes done is used to list the notes that can be marked to-do.
-
-## Get Verified
-
-The user has to input the index number of the note they would like to mark done,
-and confirm that they would like to mark it done with a yes or no answer same as the
-archive notes function. The api function then marks the note status field as true.
-The listing function for notes to-do is also used here to list the notes that can actually
-be marked done
-
-
-## Unverify your account
-
-Similar to the previous entry except that the functions now do the opposite,
-the listing function for notes done is used to list the notes that can be marked to-do.
 
 
 
