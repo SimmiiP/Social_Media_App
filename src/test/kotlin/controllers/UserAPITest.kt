@@ -23,8 +23,8 @@ class UserAPITest {
         joeSoap = User(1, "Joe Soap", "joeySoap", true, true, 74, 100, false)
         lillyWalsh = User(2, "Lilly Walsh", "lilwalshx", true, true, 300, 470, false)
         jakeNichols = User(3, "Jake Nichols", "jakey", false, false, 400, 100, false)
-        amalaDlamini = User(4, "Amala Dlamini", "Doja Cat", false, true, 5000000, 1000, true)
-        beyonceKnowles = User(5, "Beyonce Knowles", "Beyonce", true, true, 23000000, 300, true)
+        amalaDlamini = User(4, "Amala Dlamini", "Doja Cat", false, true, 50, 1000, true)
+        beyonceKnowles = User(5, "Beyonce Knowles", "Beyonce", true, true, 23, 3000, true)
 
         populatedUsers!!.addUser(joeSoap!!)
         populatedUsers!!.addUser(lillyWalsh!!)
@@ -269,15 +269,6 @@ class UserAPITest {
             Assertions.assertFalse(priority1String.contains("code app"))
             Assertions.assertFalse(priority1String.contains("test app"))
 
-
-            val priority4String = populatedNotes!!.listNotesBySelectedPriority(4).lowercase()
-            assertTrue(priority4String.contains("2 note"))
-            assertTrue(priority4String.contains("priority 4"))
-            Assertions.assertFalse(priority4String.contains("swim"))
-            assertTrue(priority4String.contains("code app"))
-            assertTrue(priority4String.contains("test app"))
-            Assertions.assertFalse(priority4String.contains("learning kotlin"))
-            Assertions.assertFalse(priority4String.contains("summer holiday"))
         }*/
         @Nested
         inner class DeleteUsers {
@@ -424,9 +415,6 @@ class UserAPITest {
             assertEquals(storingUsers.findUser(2), loadedUsers.findUser(2))
         }
 
-
-
 }
-
 
 }

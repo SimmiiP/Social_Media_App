@@ -59,7 +59,6 @@ class UserAPI(serializerType: Serializer) {
         if (numberOfVerifiedUsers() == 0) "All users are verified"
         else formatListString(users.filter { user -> user.verified == false })
 
-
     //COUNT USERS
 
     fun numberOfUsers() = users.size
@@ -107,6 +106,7 @@ class UserAPI(serializerType: Serializer) {
     fun searchByFullName(searchString: String) =
         formatListString(
             users.filter {user -> user.fullName.contains(searchString, ignoreCase = true)} )
+
 
 
     //SAVE AND LOAD
