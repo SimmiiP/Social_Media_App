@@ -99,7 +99,7 @@ fun subMenu4(): Int {
            ------------------------------------------------
            |            LIST Posts SUBMENU                |
            ------------------------------------------------
-           |   1) List All Posts                          |
+           |   1) List All a Users Posts                  |
            |   2) List Posts by Verified Users            |
            |   3) List Offline Users                      |
            ------------------------------------------------
@@ -178,10 +178,9 @@ fun runSubMenu2(){
 fun runSubMenu4(){
     do{
         when (val option = subMenu4()){
-            //1 -> listAllPosts()
-           // 2 -> listVerifiedUsersPosts()
-           // 3 -> listOfflineUsersPosts()
-           // 4 -> listActiveUsersPosts()
+            1 -> listAllAUsersPosts()
+            2 -> listVerifiedUsersPosts()
+            3 -> listOfflineUsersPosts()
             0 -> exitSubMenu()
             else -> println("Invalid menu choice: $option")
         }
@@ -227,15 +226,15 @@ logger.info {"addUser() function invoked"}
     val fullName = readNextLine("Enter your full name please")
     val userName = readNextLine("Create your username")
     val activeNow = readNextChar("Set account to active by inputting 'y' or inactive by inputting 'n'")
-    val booleanactiveNow = (activeNow == 'y'|| activeNow == 'Y')
+    val booleanActiveNow = (activeNow == 'y'|| activeNow == 'Y')
     val profilePicture = readNextChar("Do you want to set a profile picture? 'y' or 'n'")
-    val booleanprofilePicture = (profilePicture == 'y' || profilePicture == 'Y')
+    val booleanProfilePicture = (profilePicture == 'y' || profilePicture == 'Y')
     val following = readNextInt("How many accounts do you follow?")
     val followers = readNextInt("How many accounts are following you?")
     val verified = readNextChar("You can apply for verification! Input 'y' to apply! ")
     val booleanVerified = (verified == 'y' || verified == 'Y')
     val isAdded = userAPI.addUser(User(
-        userId = 0, fullName = fullName, userName = userName, activeNow = booleanactiveNow, profilePicture = booleanprofilePicture,
+        userId = 0, fullName = fullName, userName = userName, activeNow = booleanActiveNow, profilePicture = booleanProfilePicture,
         following = following, followers = followers, verified = booleanVerified ))
 
     if(isAdded){
@@ -301,9 +300,30 @@ fun listUnverifiedUsers(){
 }
 
 //LIST POSTS
+fun listAllAUsersPosts(){
+    val user: User? = askUserToChooseActiveAccount()
+    if(user!=null){
+        println(user.listAllPosts())
+    }
+}
 
+fun listVerifiedUsersPosts(){
+    val user: User? = askUserToChooseVerifiedAccount()
+    if(user!= null){
+        println(user.listAllPosts())
+    }else{
+        println("This User is not Verified")
+    }
+}
 
-
+fun listOfflineUsersPosts(){
+    val user: User? = askUserToChooseOfflineAccount()
+    if(user!= null){
+        println(user.listAllPosts())
+    }else{
+        println("This User is Active Now")
+    }
+}
 //UPDATE
 
 //UPDATE USER
@@ -317,14 +337,14 @@ fun updateUser(){
             val fullName = readNextLine("Enter your full name ")
             val userName = readNextLine("Enter your new user name ")
             val activeNow = readNextChar("Set account to active by inputting 'y' or inactive by inputting 'n'")
-            val booleanactiveNow = (activeNow == 'y'|| activeNow == 'Y')
+            val booleanActiveNow = (activeNow == 'y'|| activeNow == 'Y')
             val profilePicture = readNextChar("Do you want to set a profile picture? 'y' or 'n'")
-            val booleanprofilePicture = (profilePicture == 'y' || profilePicture == 'Y')
+            val booleanProfilePicture = (profilePicture == 'y' || profilePicture == 'Y')
             val following = readNextInt("How many accounts do you follow?")
             val followers = readNextInt("How many accounts are following you?")
             val verified = readNextChar("You can apply for verification! Input 'y' to apply! ")
             val booleanVerified = (verified == 'y' || verified == 'Y')
-            if (userAPI.updateUser(id, User(0, fullName = fullName, userName = userName, activeNow = booleanactiveNow, profilePicture = booleanprofilePicture, following = following, followers = followers, verified = booleanVerified ))){
+            if (userAPI.updateUser(id, User(0, fullName = fullName, userName = userName, activeNow = booleanActiveNow, profilePicture = booleanProfilePicture, following = following, followers = followers, verified = booleanVerified ))){
                 println("Update Successful")
             } else {
                 println("Update Failed")
@@ -342,11 +362,11 @@ fun updatePostsContentsInUser() {
     if (user != null) {
         val post: Post? = askUserToChoosePost(user)
         if (post != null) {
-            val newphotoName = readNextLine("Rename this post: ")
+            val newPhotoName = readNextLine("Rename this post: ")
             val newCaption = readNextLine("Write a new caption")
             val newLikeNums = readNextInt("Change Likes")
             val newCommentNums = readNextInt("Change Comments")
-            if (user.updatePost(post.postId, Post(photoName = newphotoName, caption = newCaption, numOfLikes = newLikeNums, numOfComments = newCommentNums )))
+            if (user.updatePost(post.postId, Post(photoName = newPhotoName, caption = newCaption, numOfLikes = newLikeNums, numOfComments = newCommentNums )))
             {
                 println("Item contents updated")
             } else {
@@ -443,6 +463,23 @@ private fun askUserToChooseActiveAccount(): User? {
         }
     }
     return null //selected user is not active
+}
+
+private fun askUserToChooseOfflineAccount(): User? {
+    listOfflineUsers()
+    if (userAPI.listOfflineUsers() > 0.toString()) {
+        val user = userAPI.findUser(readNextInt("\nEnter the id of the account you'd like to access: "))
+        if (user != null) {
+            if (user.activeNow) {
+                println("This user is active now")
+            } else {
+                return user //chosen user is offline
+            }
+        } else {
+            println("This user does not exist")
+        }
+    }
+    return null //selected user is active
 }
 
 private fun askUserToChooseVerifiedAccount(): User? {
