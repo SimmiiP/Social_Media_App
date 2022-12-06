@@ -5,6 +5,7 @@ import models.User
 import persistance.Serializer
 import utils.Utilities
 import utils.Utilities.formatListString
+import utils.Utilities.isValidListId
 
 class UserAPI(serializerType: Serializer) {
     private var serializer: Serializer = serializerType
@@ -96,6 +97,75 @@ class UserAPI(serializerType: Serializer) {
     fun deleteUser(id: Int): Boolean {
         return users.removeIf { user -> user.userId == id }
     }
+
+    //ACTIVE AND VERIFIED USERS FUNCTIONS
+
+    fun goOnline(id: Int): Boolean {
+        val foundUser = findUser(id)
+
+        if ((foundUser !=null) && !foundUser.activeNow) {
+            foundUser.activeNow = true
+            return true
+        }
+        return false
+    }
+
+    fun goOffline(id: Int): Boolean {
+        val foundUser = findUser(id)
+
+        if ((foundUser !=null) && foundUser.activeNow) {
+            foundUser.activeNow = false
+            return true
+        }
+        return false
+    }
+
+    fun getVerified(id: Int): Boolean {
+        val foundUser = findUser(id)
+
+        if ((foundUser !=null) && !foundUser.verified) {
+            foundUser.verified = true
+            return true
+        }
+        return false
+    }
+
+    fun unverifyAccount(id: Int): Boolean {
+        val foundUser = findUser(id)
+
+        if ((foundUser !=null) && foundUser.verified) {
+            foundUser.verified = false
+            return true
+        }
+        return false
+    }
+
+    fun profilePic(id: Int): Boolean {
+        val foundUser = findUser(id)
+
+        if ((foundUser !=null) && !foundUser.profilePicture) {
+            foundUser.profilePicture = true
+            return true
+        }
+        return false
+    }
+
+    fun noProfilePic(id: Int): Boolean {
+        val foundUser = findUser(id)
+
+        if ((foundUser !=null) && foundUser.profilePicture) {
+            foundUser.profilePicture = false
+            return true
+        }
+        return false
+    }
+
+    // VALIDATION
+
+    fun isValidId(id: Int): Boolean{
+        return isValidListId(id, users);
+    }
+
 
     //SEARCH
 

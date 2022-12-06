@@ -231,10 +231,12 @@ fun runSubMenu3(){
 fun runSubMenu5(){
     do{
         when (val option = subMenu5()){
-           // 1 -> goOnline()
-           // 2 -> goOffline()
-          //  3 -> getVerified()
-          //  4 -> unverify()
+            1 -> goOnline()
+            2 -> goOffline()
+            3 -> getVerified()
+            4 -> getUnverified()
+            5 -> setProfilePic()
+            6 -> removeProfilePic()
             0 -> exitSubMenu()
             else -> println("Invalid menu choice: $option")
         }
@@ -451,6 +453,108 @@ fun deleteAPost() {
         }
     }
 
+}
+
+// GO ONLINE, GO OFFLINE, GET VERIFIED, UNVERIFY ACCOUNT, SET PROFILE PIC, REMOVE PROFILE PIC
+fun goOnline(){
+    logger.info {"goOnline() function invoked" }
+    println(userAPI.listOfflineUsers())
+    if (userAPI.numberOfUsersOffline() > 0) {
+        val idToOnline = readNextInt("Enter the id of the account to go online with ")
+        if (userAPI.isValidId(idToOnline)) {
+            val ans: String = readNextLine("Go online with this account? ")
+            if (ans == "Yes")
+                userAPI.goOnline(idToOnline)
+            if (ans == "No")
+                println("Nevermind")
+        } else {
+            println("There are no offline users")
+        }
+    }
+}
+
+fun goOffline(){
+    logger.info {"goOffline() function invoked" }
+    println(userAPI.listActiveUsers())
+    if (userAPI.numberOfActiveUsers() > 0) {
+        val idToOffline = readNextInt("Enter the id of the account to go offline with ")
+        if (userAPI.isValidId(idToOffline)) {
+            val ans: String = readNextLine("Go offline with this account? ")
+            if (ans == "Yes")
+                userAPI.goOffline(idToOffline)
+            if (ans == "No")
+                println("Nevermind")
+        } else {
+            println("There are no online users")
+        }
+    }
+}
+fun getVerified(){
+    logger.info {"getVerified() function invoked" }
+    println(userAPI.listUnverifiedUsers())
+    if (userAPI.numberOfUnverifiedUsers() > 0) {
+        val idToVerified = readNextInt("Enter the id of the account you'd like to verify ")
+        if (userAPI.isValidId(idToVerified)) {
+            val ans: String = readNextLine("Make this a verified account?")
+            if (ans == "Yes")
+                userAPI.getVerified(idToVerified)
+            if (ans == "No")
+                println("Nevermind")
+        } else {
+            println("There are no unverified users")
+        }
+    }
+}
+
+fun getUnverified(){
+    logger.info {"getUnverified() function invoked" }
+    println(userAPI.listVerifiedUsers())
+    if (userAPI.numberOfVerifiedUsers() > 0) {
+        val idToUnverified = readNextInt("Enter the id of the account you would like to unverify ")
+        if (userAPI.isValidId(idToUnverified)) {
+            val ans: String = readNextLine("Mark this an unverified account?")
+            if (ans == "Yes")
+                userAPI.unverifyAccount(idToUnverified)
+            if (ans == "No")
+                println("Nevermind")
+        } else {
+            println("There are no verified users")
+        }
+    }
+}
+
+fun setProfilePic(){
+    logger.info {"setProfilePic() function invoked" }
+    println(userAPI.listUsersWithoutProfilePic())
+    if (userAPI.numberOfUsersWithoutProfilePic() > 0) {
+        val idToPicturey = readNextInt("Enter the id of the account to set a profile pic for ")
+        if (userAPI.isValidId(idToPicturey)) {
+            val ans: String = readNextLine("Set picture for this account? ")
+            if (ans == "Yes")
+                userAPI.profilePic(idToPicturey)
+            if (ans == "No")
+                println("Nevermind")
+        } else {
+            println("There are no users without a profile pic")
+        }
+    }
+}
+
+fun removeProfilePic(){
+    logger.info {"removeProfilePic() function invoked" }
+    println(userAPI.listUsersWithProfilePic())
+    if (userAPI.numberOfUsersWithProfilePic() > 0) {
+        val idToPicturex = readNextInt("Enter the id of the account to remove profile pic on ")
+        if (userAPI.isValidId(idToPicturex)) {
+            val ans: String = readNextLine("Remove picture on this account? ")
+            if (ans == "Yes")
+                userAPI.noProfilePic(idToPicturex)
+            if (ans == "No")
+                println("Nevermind")
+        } else {
+            println("There are no users with profile pictures")
+        }
+    }
 }
 
 //SEARCH

@@ -19,7 +19,7 @@ class UserAPITest {
     private var emptyUsers: UserAPI? = UserAPI(XMLSerializer(File("users.xml")))
 
     @BeforeEach
-    fun setup(){
+    fun setup() {
         joeSoap = User(1, "Joe Soap", "joeySoap", true, true, 74, 100, false)
         lillyWalsh = User(2, "Lilly Walsh", "lilwalshx", true, true, 300, 470, false)
         jakeNichols = User(3, "Jake Nichols", "jakey", false, false, 400, 100, false)
@@ -34,7 +34,7 @@ class UserAPITest {
     }
 
     @AfterEach
-    fun tearDown(){
+    fun tearDown() {
         joeSoap = null
         lillyWalsh = null
         jakeNichols = null
@@ -47,12 +47,12 @@ class UserAPITest {
     @Nested
     inner class AddUsers {
         @Test
-        fun `adding a User to a populated list adds to the array list`(){
+        fun `adding a User to a populated list adds to the array list`() {
             val newUser = User(6, "Anna Sorokin", "Anna Delvey", true, false, 50, 7000, false)
             assertEquals(5, populatedUsers!!.numberOfUsers())
             assertTrue(populatedUsers!!.addUser(newUser))
             assertEquals(6, populatedUsers!!.numberOfUsers())
-            assertEquals(newUser, populatedUsers!!.findUser(populatedUsers!!.numberOfUsers() -1))
+            assertEquals(newUser, populatedUsers!!.findUser(populatedUsers!!.numberOfUsers() - 1))
         }
 
         @Test
@@ -64,6 +64,7 @@ class UserAPITest {
             assertEquals(newUser, emptyUsers!!.findUser(emptyUsers!!.numberOfUsers() - 1))
         }
     }
+
     @Nested
     inner class CountingMethods {
 
@@ -240,7 +241,8 @@ class UserAPITest {
             Assertions.assertFalse(unverifiedUsersString.contains("beyonce knowles"))
         }
     }
-       /* @Test
+
+    /* @Test
         fun `listNotesBySelectedPriority returns No Notes when ArrayList is empty`() {
             assertEquals(0, emptyNotes!!.numberOfNotes())
             assertTrue(emptyNotes!!.listNotesBySelectedPriority(1).lowercase().contains("no notes")
@@ -270,32 +272,37 @@ class UserAPITest {
             Assertions.assertFalse(priority1String.contains("test app"))
 
         }*/
-        @Nested
-        inner class DeleteUsers {
-            @Test
-            fun `deleting a User that does not exist, returns null`() {
-                assertFalse(emptyUsers!!.deleteUser(0))
-                assertFalse(populatedUsers!!.deleteUser(-1))
-                assertFalse(populatedUsers!!.deleteUser(6))
-            }
-
-            @Test
-            fun `deleting a User that exists deletes the users account by`() {
-                assertEquals(5, populatedUsers!!.numberOfUsers())
-                assertTrue( populatedUsers!!.deleteUser(4))
-                assertEquals(4, populatedUsers!!.numberOfUsers())
-                assertTrue( populatedUsers!!.deleteUser(1))
-                assertEquals(3, populatedUsers!!.numberOfUsers())
-            }
+    @Nested
+    inner class DeleteUsers {
+        @Test
+        fun `deleting a User that does not exist, returns null`() {
+            assertFalse(emptyUsers!!.deleteUser(0))
+            assertFalse(populatedUsers!!.deleteUser(-1))
+            assertFalse(populatedUsers!!.deleteUser(6))
         }
+
+        @Test
+        fun `deleting a User that exists deletes the users account by`() {
+            assertEquals(5, populatedUsers!!.numberOfUsers())
+            assertTrue(populatedUsers!!.deleteUser(4))
+            assertEquals(4, populatedUsers!!.numberOfUsers())
+            assertTrue(populatedUsers!!.deleteUser(1))
+            assertEquals(3, populatedUsers!!.numberOfUsers())
+        }
+    }
 
     @Nested
     inner class UpdateUsers {
         @Test
         fun `updating a User that does not exist returns false`() {
             assertFalse(populatedUsers!!.updateUser(6, User(6, "Lani Good", "Laniii", true, true, 4000, 45000, true)))
-            assertFalse(populatedUsers!!.updateUser(-1, User(-1, "KotlinLearner", "KotlinLearner47", false,false, 2000, 2000, false)))
-            assertFalse(emptyUsers!!.updateUser(0, User(0, "Jemima O", "Jemmy", false,true, 7000, 83000, true)))
+            assertFalse(
+                populatedUsers!!.updateUser(
+                    -1,
+                    User(-1, "KotlinLearner", "KotlinLearner47", false, false, 2000, 2000, false)
+                )
+            )
+            assertFalse(emptyUsers!!.updateUser(0, User(0, "Jemima O", "Jemmy", false, true, 7000, 83000, true)))
         }
 
         @Test
@@ -306,115 +313,291 @@ class UserAPITest {
             assertEquals("joeySoap", populatedUsers!!.findUser(0)!!.userName)
 
             //update note 5 with new information and ensure contents updated successfully
-            assertTrue(populatedUsers!!.updateUser(0, User(0, "Joseph Soap", "JoSo", true,true, 74, 100, false)))
+            assertTrue(populatedUsers!!.updateUser(0, User(0, "Joseph Soap", "JoSo", true, true, 74, 100, false)))
             assertEquals("Joseph Soap", populatedUsers!!.findUser(0)!!.fullName)
             assertEquals("JoSo", populatedUsers!!.findUser(0)!!.userName)
         }
     }
 
     @Nested
-    inner class SearchMethods {
-
+    inner class GoOnline {
         @Test
-        fun `search users by name returns no users when no users with that name exists`() {
-            assertEquals(5, populatedUsers!!.numberOfUsers())
-            val searchResults = populatedUsers!!.searchByFullName("no results expected")
-            assertTrue(searchResults.isEmpty())
+        fun `taking an account online that does not exist returns false`() {
 
-            assertEquals(0, emptyUsers!!.numberOfUsers())
-            assertTrue(emptyUsers!!.searchByFullName("no results expected").isEmpty())
+            assertFalse(populatedUsers!!.goOnline(6))
+            assertFalse(populatedUsers!!.goOnline(-1))
+            assertFalse(populatedUsers!!.goOnline(0))
         }
 
         @Test
-        fun `search users by name returns users when users with that name exist`() {
-            assertEquals(5, populatedUsers!!.numberOfUsers())
-
-            var searchResults = populatedUsers!!.searchByFullName("Joe Soap")
-            assertTrue(searchResults.contains("Joe Soap"))
-            assertFalse(searchResults.contains("Amala Dlamini"))
-
-            searchResults = populatedUsers!!.searchByFullName("Soap")
-            assertTrue(searchResults.contains("Joe Soap"))
-            assertFalse(searchResults.contains("Amala Dlamini"))
-
-            searchResults = populatedUsers!!.searchByFullName(("soAp"))
-            assertTrue(searchResults.contains("Joe Soap"))
-            assertFalse(searchResults.contains("Amala Dlamini"))
+        fun `taking an account that exists online returns true and sets active now to true`() {
+            assertEquals(jakeNichols, populatedUsers!!.findUser(2))
+            assertEquals("Jake Nichols", populatedUsers!!.findUser(2)!!.fullName)
+            assertEquals("jakey", populatedUsers!!.findUser(2)!!.userName)
+            assertEquals(false, populatedUsers!!.findUser(2)!!.activeNow)
+            assertEquals(false, populatedUsers!!.findUser(2)!!.profilePicture)
+            assertEquals(400, populatedUsers!!.findUser(2)!!.following)
+            assertEquals(100, populatedUsers!!.findUser(2)!!.followers)
+            assertEquals(false, populatedUsers!!.findUser(2)!!.verified)
+            assertTrue(populatedUsers!!.goOnline(2))
+            assertEquals("Jake Nichols", populatedUsers!!.findUser(2)!!.fullName)
+            assertEquals("jakey", populatedUsers!!.findUser(2)!!.userName)
+            assertEquals(true, populatedUsers!!.findUser(2)!!.activeNow)
+            assertEquals(false, populatedUsers!!.findUser(2)!!.profilePicture)
         }
-
-        @Test
-        fun `search users by username returns no users when no users with that username exists`() {
-            assertEquals(5, populatedUsers!!.numberOfUsers())
-            val searchResults = populatedUsers!!.searchByUsername("no results expected")
-            assertTrue(searchResults.isEmpty())
-
-            assertEquals(0, emptyUsers!!.numberOfUsers())
-            assertTrue(emptyUsers!!.searchByUsername("no results expected").isEmpty())
-        }
-
-        @Test
-        fun `search user by username returns notes when notes with that title exist`() {
-            assertEquals(5, populatedUsers!!.numberOfUsers())
-
-            var searchResults = populatedUsers!!.searchByUsername("joeySoap")
-            assertTrue(searchResults.contains("joeySoap"))
-            assertFalse(searchResults.contains("Doja Cat"))
-
-            searchResults = populatedUsers!!.searchByUsername("Soap")
-            assertTrue(searchResults.contains("joeySoap"))
-            assertFalse(searchResults.contains("Doja Cat"))
-
-            searchResults = populatedUsers!!.searchByUsername(("soAp"))
-            assertTrue(searchResults.contains("joeySoap"))
-            assertFalse(searchResults.contains("Doja Cat"))
-        }
-
     }
 
     @Nested
-    inner class PersistenceTests {
-
+    inner class GoOffline {
         @Test
-        fun `saving and loading an empty collection in XML doesn't crash app`() {
-            // Saving an empty users.XML file.
-            val storingUsers = UserAPI(XMLSerializer(File("users.xml")))
-            storingUsers.store()
+        fun `taking an account offline that does not exist returns false`() {
 
-            //Loading the empty users.xml file into a new object
-            val loadedUsers = UserAPI(XMLSerializer(File("users.xml")))
-            loadedUsers.load()
-
-            //Comparing the source of the users (storingUsers) with the XML loaded users (loadedUsers)
-            assertEquals(0, storingUsers.numberOfUsers())
-            assertEquals(0, loadedUsers.numberOfUsers())
-            assertEquals(storingUsers.numberOfUsers(), loadedUsers.numberOfUsers())
+            assertFalse(populatedUsers!!.goOffline(6))
+            assertFalse(populatedUsers!!.goOffline(-1))
+            assertFalse(populatedUsers!!.goOffline(7))
         }
 
         @Test
-        fun `saving and loading an loaded collection in XML doesn't loose data`() {
-            // Storing 3 users to the users.XML file.
-            val storingUsers = UserAPI(XMLSerializer(File("users.xml")))
-            storingUsers.addUser(joeSoap!!)
-            storingUsers.addUser(lillyWalsh!!)
-            storingUsers.addUser(jakeNichols!!)
-            storingUsers.store()
+        fun `taking an account that exists offline returns true and sets active now to false`() {
+            assertEquals(lillyWalsh, populatedUsers!!.findUser(1))
+            assertEquals("Lilly Walsh", populatedUsers!!.findUser(1)!!.fullName)
+            assertEquals("lilwalshx", populatedUsers!!.findUser(1)!!.userName)
+            assertEquals(true, populatedUsers!!.findUser(1)!!.activeNow)
+            assertEquals(true, populatedUsers!!.findUser(1)!!.profilePicture)
+            assertEquals(300, populatedUsers!!.findUser(1)!!.following)
+            assertEquals(470, populatedUsers!!.findUser(1)!!.followers)
+            assertEquals(false, populatedUsers!!.findUser(1)!!.verified)
+            assertTrue(populatedUsers!!.goOffline(1))
+            assertEquals("Lilly Walsh", populatedUsers!!.findUser(1)!!.fullName)
+            assertEquals("lilwalshx", populatedUsers!!.findUser(1)!!.userName)
+            assertEquals(false, populatedUsers!!.findUser(1)!!.activeNow)
+            assertEquals(true, populatedUsers!!.findUser(1)!!.profilePicture)
+        }
+    }
 
-            //Loading users.xml into a different collection
-            val loadedUsers = UserAPI(XMLSerializer(File("users.xml")))
-            loadedUsers.load()
+    @Nested
+    inner class GetVerified {
+        @Test
+        fun `verifying an account that does not exist returns false`() {
 
-
-            // EDIT THE FIND USER FUNCTION
-
-            //Comparing the source of the users (storingUsers) with the XML loaded users (loadedUsers)
-            assertEquals(3, storingUsers.numberOfUsers())
-            assertEquals(3, loadedUsers.numberOfUsers())
-            assertEquals(storingUsers.numberOfUsers(), loadedUsers.numberOfUsers())
-            assertEquals(storingUsers.findUser(0), loadedUsers.findUser(0))
-            assertEquals(storingUsers.findUser(1), loadedUsers.findUser(1))
-            assertEquals(storingUsers.findUser(2), loadedUsers.findUser(2))
+            assertFalse(populatedUsers!!.goOffline(6))
+            assertFalse(populatedUsers!!.goOffline(-1))
+            assertFalse(populatedUsers!!.goOffline(7))
         }
 
-}
+        @Test
+        fun `verifying an account that exists returns true and sets active now to false`() {
+            assertEquals(lillyWalsh, populatedUsers!!.findUser(1))
+            assertEquals("Lilly Walsh", populatedUsers!!.findUser(1)!!.fullName)
+            assertEquals("lilwalshx", populatedUsers!!.findUser(1)!!.userName)
+            assertEquals(true, populatedUsers!!.findUser(1)!!.activeNow)
+            assertEquals(true, populatedUsers!!.findUser(1)!!.profilePicture)
+            assertEquals(300, populatedUsers!!.findUser(1)!!.following)
+            assertEquals(470, populatedUsers!!.findUser(1)!!.followers)
+            assertEquals(false, populatedUsers!!.findUser(1)!!.verified)
+            assertTrue(populatedUsers!!.getVerified(1))
+            assertEquals("Lilly Walsh", populatedUsers!!.findUser(1)!!.fullName)
+            assertEquals("lilwalshx", populatedUsers!!.findUser(1)!!.userName)
+            assertEquals(true, populatedUsers!!.findUser(1)!!.activeNow)
+            assertEquals(true, populatedUsers!!.findUser(1)!!.profilePicture)
+            assertEquals(300, populatedUsers!!.findUser(1)!!.following)
+            assertEquals(470, populatedUsers!!.findUser(1)!!.followers)
+            assertEquals(true, populatedUsers!!.findUser(1)!!.verified)
+        }
+    }
 
-}
+    @Nested
+    inner class GetUnverified {
+        @Test
+        fun `unverifying an account that does not exist returns false`() {
+
+            assertFalse(populatedUsers!!.unverifyAccount(6))
+            assertFalse(populatedUsers!!.unverifyAccount(-1))
+            assertFalse(populatedUsers!!.unverifyAccount(7))
+        }
+
+        @Test
+        fun `unverifying that exists returns true and sets active now to false`() {
+            assertEquals(beyonceKnowles, populatedUsers!!.findUser(4))
+            assertEquals("Beyonce Knowles", populatedUsers!!.findUser(4)!!.fullName)
+            assertEquals("Beyonce", populatedUsers!!.findUser(4)!!.userName)
+            assertEquals(true, populatedUsers!!.findUser(4)!!.activeNow)
+            assertEquals(true, populatedUsers!!.findUser(4)!!.profilePicture)
+            assertEquals(23, populatedUsers!!.findUser(4)!!.following)
+            assertEquals(3000, populatedUsers!!.findUser(4)!!.followers)
+            assertEquals(true, populatedUsers!!.findUser(4)!!.verified)
+            assertTrue(populatedUsers!!.unverifyAccount(4))
+            assertEquals("Beyonce Knowles", populatedUsers!!.findUser(4)!!.fullName)
+            assertEquals("Beyonce", populatedUsers!!.findUser(4)!!.userName)
+            assertEquals(true, populatedUsers!!.findUser(4)!!.activeNow)
+            assertEquals(true, populatedUsers!!.findUser(4)!!.profilePicture)
+            assertEquals(23, populatedUsers!!.findUser(4)!!.following)
+            assertEquals(3000, populatedUsers!!.findUser(4)!!.followers)
+            assertEquals(false, populatedUsers!!.findUser(4)!!.verified)
+        }
+    }
+
+    @Nested
+    inner class SetProfilePic {
+        @Test
+        fun `setting a profile pic on an account that does not exist returns false`() {
+
+            assertFalse(populatedUsers!!.profilePic(6))
+            assertFalse(populatedUsers!!.profilePic(-1))
+            assertFalse(populatedUsers!!.profilePic(7))
+        }
+
+        @Test
+        fun `setting a profile pic on an account that exists returns true and sets active now to false`() {
+            assertEquals(jakeNichols, populatedUsers!!.findUser(2))
+            assertEquals("Jake Nichols", populatedUsers!!.findUser(2)!!.fullName)
+            assertEquals("jakey", populatedUsers!!.findUser(2)!!.userName)
+            assertEquals(false, populatedUsers!!.findUser(2)!!.activeNow)
+            assertEquals(false, populatedUsers!!.findUser(2)!!.profilePicture)
+            assertEquals(400, populatedUsers!!.findUser(2)!!.following)
+            assertEquals(100, populatedUsers!!.findUser(2)!!.followers)
+            assertEquals(false, populatedUsers!!.findUser(2)!!.verified)
+            assertTrue(populatedUsers!!.profilePic(2))
+            assertEquals("Jake Nichols", populatedUsers!!.findUser(2)!!.fullName)
+            assertEquals("jakey", populatedUsers!!.findUser(2)!!.userName)
+            assertEquals(false, populatedUsers!!.findUser(2)!!.activeNow)
+            assertEquals(true, populatedUsers!!.findUser(2)!!.profilePicture)
+        }
+    }
+
+        @Nested
+        inner class RemoveProfilePic {
+            @Test
+            fun `removing a profile pic on an account that does not exist returns false`() {
+
+                assertFalse(populatedUsers!!.noProfilePic(6))
+                assertFalse(populatedUsers!!.noProfilePic(-1))
+                assertFalse(populatedUsers!!.noProfilePic(7))
+            }
+
+            @Test
+            fun `removing a profile pic on an account that exists returns true and sets active now to false`() {
+                assertEquals(beyonceKnowles, populatedUsers!!.findUser(4))
+                assertEquals("Beyonce Knowles", populatedUsers!!.findUser(4)!!.fullName)
+                assertEquals("Beyonce", populatedUsers!!.findUser(4)!!.userName)
+                assertEquals(true, populatedUsers!!.findUser(4)!!.activeNow)
+                assertEquals(true, populatedUsers!!.findUser(4)!!.profilePicture)
+                assertEquals(23, populatedUsers!!.findUser(4)!!.following)
+                assertEquals(3000, populatedUsers!!.findUser(4)!!.followers)
+                assertEquals(true, populatedUsers!!.findUser(4)!!.verified)
+                assertTrue(populatedUsers!!.noProfilePic(4))
+                assertEquals("Beyonce Knowles", populatedUsers!!.findUser(4)!!.fullName)
+                assertEquals("Beyonce", populatedUsers!!.findUser(4)!!.userName)
+                assertEquals(true, populatedUsers!!.findUser(4)!!.activeNow)
+                assertEquals(false, populatedUsers!!.findUser(4)!!.profilePicture)
+                assertEquals(23, populatedUsers!!.findUser(4)!!.following)
+                assertEquals(3000, populatedUsers!!.findUser(4)!!.followers)
+                assertEquals(true, populatedUsers!!.findUser(4)!!.verified)
+            }
+        }
+
+            @Nested
+            inner class SearchMethods {
+
+                @Test
+                fun `search users by name returns no users when no users with that name exists`() {
+                    assertEquals(5, populatedUsers!!.numberOfUsers())
+                    val searchResults = populatedUsers!!.searchByFullName("no results expected")
+                    assertTrue(searchResults.isEmpty())
+
+                    assertEquals(0, emptyUsers!!.numberOfUsers())
+                    assertTrue(emptyUsers!!.searchByFullName("no results expected").isEmpty())
+                }
+
+                @Test
+                fun `search users by name returns users when users with that name exist`() {
+                    assertEquals(5, populatedUsers!!.numberOfUsers())
+
+                    var searchResults = populatedUsers!!.searchByFullName("Joe Soap")
+                    assertTrue(searchResults.contains("Joe Soap"))
+                    assertFalse(searchResults.contains("Amala Dlamini"))
+
+                    searchResults = populatedUsers!!.searchByFullName("Soap")
+                    assertTrue(searchResults.contains("Joe Soap"))
+                    assertFalse(searchResults.contains("Amala Dlamini"))
+
+                    searchResults = populatedUsers!!.searchByFullName(("soAp"))
+                    assertTrue(searchResults.contains("Joe Soap"))
+                    assertFalse(searchResults.contains("Amala Dlamini"))
+                }
+
+                @Test
+                fun `search users by username returns no users when no users with that username exists`() {
+                    assertEquals(5, populatedUsers!!.numberOfUsers())
+                    val searchResults = populatedUsers!!.searchByUsername("no results expected")
+                    assertTrue(searchResults.isEmpty())
+
+                    assertEquals(0, emptyUsers!!.numberOfUsers())
+                    assertTrue(emptyUsers!!.searchByUsername("no results expected").isEmpty())
+                }
+
+                @Test
+                fun `search user by username returns notes when notes with that title exist`() {
+                    assertEquals(5, populatedUsers!!.numberOfUsers())
+
+                    var searchResults = populatedUsers!!.searchByUsername("joeySoap")
+                    assertTrue(searchResults.contains("joeySoap"))
+                    assertFalse(searchResults.contains("Doja Cat"))
+
+                    searchResults = populatedUsers!!.searchByUsername("Soap")
+                    assertTrue(searchResults.contains("joeySoap"))
+                    assertFalse(searchResults.contains("Doja Cat"))
+
+                    searchResults = populatedUsers!!.searchByUsername(("soAp"))
+                    assertTrue(searchResults.contains("joeySoap"))
+                    assertFalse(searchResults.contains("Doja Cat"))
+                }
+
+            }
+
+            @Nested
+            inner class PersistenceTests {
+
+                @Test
+                fun `saving and loading an empty collection in XML doesn't crash app`() {
+                    // Saving an empty users.XML file.
+                    val storingUsers = UserAPI(XMLSerializer(File("users.xml")))
+                    storingUsers.store()
+
+                    //Loading the empty users.xml file into a new object
+                    val loadedUsers = UserAPI(XMLSerializer(File("users.xml")))
+                    loadedUsers.load()
+
+                    //Comparing the source of the users (storingUsers) with the XML loaded users (loadedUsers)
+                    assertEquals(0, storingUsers.numberOfUsers())
+                    assertEquals(0, loadedUsers.numberOfUsers())
+                    assertEquals(storingUsers.numberOfUsers(), loadedUsers.numberOfUsers())
+                }
+            }
+
+                @Test
+                fun `saving and loading an loaded collection in XML doesn't loose data`() {
+                    // Storing 3 users to the users.XML file.
+                    val storingUsers = UserAPI(XMLSerializer(File("users.xml")))
+                    storingUsers.addUser(joeSoap!!)
+                    storingUsers.addUser(lillyWalsh!!)
+                    storingUsers.addUser(jakeNichols!!)
+                    storingUsers.store()
+
+                    //Loading users.xml into a different collection
+                    val loadedUsers = UserAPI(XMLSerializer(File("users.xml")))
+                    loadedUsers.load()
+
+
+                    // EDIT THE FIND USER FUNCTION
+
+                    //Comparing the source of the users (storingUsers) with the XML loaded users (loadedUsers)
+                    assertEquals(3, storingUsers.numberOfUsers())
+                    assertEquals(3, loadedUsers.numberOfUsers())
+                    assertEquals(storingUsers.numberOfUsers(), loadedUsers.numberOfUsers())
+                    assertEquals(storingUsers.findUser(0), loadedUsers.findUser(0))
+                    assertEquals(storingUsers.findUser(1), loadedUsers.findUser(1))
+                    assertEquals(storingUsers.findUser(2), loadedUsers.findUser(2))
+                }
+
+            }
