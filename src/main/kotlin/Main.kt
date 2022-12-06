@@ -7,8 +7,15 @@ import utils.ScannerInput
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
 import utils.ScannerInput.readNextChar
+import utils.ScannerInput.readNextPhotoName
 import java.io.File
 import kotlin.system.exitProcess
+import utils.photoNameUtility
+import utils.valididateInput
+import utils.valididateInput.readValidCount
+import utils.valididateInput.readValidCount2
+import utils.valididateInput.readValidCount3
+import utils.valididateInput.readValidCount4
 
 const val ANSI_RESET = "\u001B[0m"
 const val ANSI_BLACK = "\u001B[30m"
@@ -81,9 +88,8 @@ fun subMenu2(): Int {
            |   3) List Offline Users                      |
            |   4) List Users with a Profile Picture       |
            |   5) List Users without a Profile Picture    |
-           |   6) List Verified Users                     |
+           |   6) List Verified Users that are Active Now |
            |   7) List Unverified Users                   |
-           |   8) List Verified users that are Active Now |
            ------------------------------------------------
            ${ANSI_RED}|   0) Exit SubMenu                            |
            ------------------------------------------------
@@ -94,17 +100,17 @@ fun subMenu2(): Int {
 fun subMenu4(): Int {
     return ScannerInput.readNextInt(
         """${ANSI_BLUE}
-           ------------------------------------------------
-           |             Social Media App                 |
-           ------------------------------------------------
-           |            LIST Posts SUBMENU                |
-           ------------------------------------------------
-           |   1) List All a Users Posts                  |
-           |   2) List Posts by Verified Users            |
-           |   3) List Offline Users                      |
-           ------------------------------------------------
-           ${ANSI_RED}|   0) Exit SubMenu                            |
-           ------------------------------------------------
+           ---------------------------------------------------
+           |                 Social Media App                |
+           ---------------------------------------------------
+           |                LIST POSTS SUBMENU               |
+           ---------------------------------------------------
+           |   1) List All a Users Posts                     |
+           |   2) List Posts by Verified Users who are Active|
+           |   3) List Offline Users                         |
+           ---------------------------------------------------
+           ${ANSI_RED}|   0) Exit SubMenu                         |
+           ---------------------------------------------------
         ==>> ${ANSI_RESET}""".trimIndent()
     )
 }
@@ -126,7 +132,7 @@ fun subMenu3(): Int {
     )
 }
 
-//RUN MENUS
+//RUN MENUS AND SUBMENUS
 fun runMenu(): Int {
     do{
         when (val option = mainMenu()){
@@ -200,6 +206,18 @@ fun runSubMenu3(){
 
 }
 
+/*fun runSubMenu5(){
+    do{
+        when (val option = subMenu5()){
+            1 -> searchForPostsByPhotoName()
+            2 -> searchByCaption()
+            0 -> exitSubMenu()
+            else -> println("Invalid menu choice: $option")
+        }
+    } while (true)
+
+}*/
+
 // SAVE AND LOAD
 fun saveUsers(){
     try {
@@ -229,8 +247,8 @@ logger.info {"addUser() function invoked"}
     val booleanActiveNow = (activeNow == 'y'|| activeNow == 'Y')
     val profilePicture = readNextChar("Do you want to set a profile picture? 'y' or 'n'")
     val booleanProfilePicture = (profilePicture == 'y' || profilePicture == 'Y')
-    val following = readNextInt("How many accounts do you follow?")
-    val followers = readNextInt("How many accounts are following you?")
+    val following = readValidCount("How many accounts do you follow? (Up to 5000)")
+    val followers = readValidCount2("How many accounts are following you? (Up to 5000)")
     val verified = readNextChar("You can apply for verification! Input 'y' to apply! ")
     val booleanVerified = (verified == 'y' || verified == 'Y')
     val isAdded = userAPI.addUser(User(
@@ -253,10 +271,10 @@ private fun addPostToUser(){
     userAPI.findUser(0)!!.addPost(
         Post(
             postId = 0,
-             photoName = readNextLine("\t Name this Post"),
+             photoName = readNextPhotoName("\t Pick a name for this post from: ${photoNameUtility.photoNames}"),
              caption = readNextLine("\t Add a caption!"),
-             numOfLikes = readNextInt("How many likes does it have?"),
-             numOfComments = readNextInt("How many comments does it have?")
+             numOfLikes = readValidCount3("How many likes does it have?"),
+             numOfComments = readValidCount4("How many comments does it have?")
         )
     )
 }}

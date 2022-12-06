@@ -14,13 +14,13 @@ object Utilities {
             .joinToString(separator = "\n") { user ->  "$user" }
 
     @JvmStatic
-    fun formatSetString(postsToFormat: Set<Post>): String =
+    fun formatSetString(postsToFormat: MutableSet<Post>): String =
         postsToFormat
             .joinToString(separator = "\n") { post ->  "\t$post" }
 
     @JvmStatic
-    fun validRange(numberToCheck: Int, min: Int, max: Int): Boolean{
-        return numberToCheck in min .. max
+    fun validRange(numberToCheck: Int, min: Int, max: Int): Boolean {
+        return numberToCheck in min..max
     }
 
 }

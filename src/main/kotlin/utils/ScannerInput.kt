@@ -6,7 +6,7 @@ import java.util.*
 object ScannerInput {
 
     @JvmStatic
-    fun readNextInt(prompt: String?): Int {
+    fun readNextInt(prompt: String): Int {
         do {
             try {
                 print(prompt)
@@ -28,6 +28,20 @@ object ScannerInput {
     fun readNextChar(prompt: String?): Char {
         print(prompt)
         return Scanner(System.`in`).next()[0]
+    }
+
+    @JvmStatic
+    fun readNextPhotoName(prompt: String?): String {
+        print(prompt)
+        var input = Scanner(System.`in`).nextLine()
+        do{
+            if (photoNameUtility.isValidPhotoName(input))
+                return input
+            else{
+                print("Invalid name $input. Please pick from the list")
+                input = Scanner(System. `in`).nextLine()
+            }
+        } while (true)
     }
 
 }
